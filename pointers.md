@@ -12,6 +12,7 @@ p = &m;         // points p to m
 int *q = &n;    // declares a pointer to n
 
 int *i, *j, *k; // declares three pointers, all to ints
+i = p;          // points i to the same pointee as p
 ```
 As shown above, the `&` symbol can be used to obtain the memory address of variables.
 Note that `&p` would return the address where `p` is stored.
@@ -82,11 +83,34 @@ An asterisk is needed before each variable name when declaring multiple pointers
 int *p, q, r; // this declares a pointer and two ints
 ```
 
-### Initialization
+### Dangling Pointers
 Local variables in C are not initialized; newly declared pointers are *not* initialized to
 null. Hence, dereferencing uninitialized pointers will result in unexpected behavior.
 ```c
 /* This code will likely error. */
 int *p;
 *p = 5;
+```
+
+### Stale Pointers
+
+### Returned Pointers
+Functions should not return pointers to local variables, because the stack frame is erased
+and the memory is deallocated upon reaching `return`. While the pointer will point to the
+correct location, this unallocated memory may be overwritten in the future, causing the
+values to change unexpectedly.
+```c
+/* A function that returns a pointer to the local variable y.*/
+int *foo() {
+    int y = 3;
+    return &y;
+}
+
+/* The main function. */
+main() {
+    int *p;
+    p = foo();          // calls foo, pointing p to y
+    printf("%d", *p)    // correctly prints 3
+    printf("%d", *p)    // prints garbage left by printf
+}
 ```
