@@ -3,7 +3,7 @@
 The following list contains useful functions relevant to memory.
 * `sizeof(x)` returns the size *in bytes* of a type or variable.
 
-* `malloc(int n)` allocates `n` bytes for a pointer to point to. It must be
+* `malloc(size_t n)` allocates `n` bytes for a pointer to point to. It must be
 typecasted to the same type as the pointer.
     ```c
     int *ptr;
@@ -14,19 +14,22 @@ typecasted to the same type as the pointer.
     `sizeof(int)` is multiplied by `n` to create an array of size `n`.
     * Note that the allocated memory is initially garbage, so should not be
     used until values have been set for it.
-    * Returns a null pointer if the memory cannot be allocated.
 
-* `realloc(void *ptr, int n)` reallocates the block previously allocated at
+* `calloc(size_t n, size_t s)` allocates memory for `n` items of size `s` similar to `malloc`, but
+zeros the allocated memory as well.
+
+* `realloc(void *ptr, size_t n)` reallocates the block previously allocated at
 `ptr` to a new size and returns the address of the new memory block. It
 must be typecasted to the same type as the pointer.
-    * Returns a null pointer if the memory cannot be allocated.
     * If `n` is 0, this function behaves like `free` (listed below).
 
 * `free(void *ptr)` deallocates memory after it is done being used. This
 should always be used to clean up allocating memory.
     * `free`ing unallocated memory will cause errors or bugs
 
-**ALWAYS** check for a null pointer after calling `malloc` or `realloc`!
+
+`malloc`, `realloc`, and `calloc` will return a null pointer if they fail to find
+adequate memory. **ALWAYS** check for a null pointer after using these functions!
 
 ## Memory Locations
 C has three pools of memory, each which is a part of a program's *address space*.

@@ -4,15 +4,15 @@
 ### Declaration
 Pointer variables store memory addresses. They can be initialized in the following ways:
 ```c
-int n, m;
+int n, m;       // declares two ints
 
-int *p;         // a pointer to an int
+int *p;         // declares a pointer to an int
 p = &m;         // points p to m 
 
 int *q = &n;    // declares a pointer to n
 
 int *i, *j, *k; // declares three pointers, all to ints
-i = p;          // points i to the same pointee as p
+i = p;          // points i to the same address as p
 ```
 As shown above, the `&` symbol can be used to obtain the memory address of variables.
 Note that `&p` would return the address where `p` is stored.
@@ -33,7 +33,7 @@ int *p = &n;
 *p = 5;         // n is now equal to 5
 ```
 
-### Structures
+### Structure Members
 There are two different ways to access the members of a structure from a pointer.
 Generally, arrow notation is preferred.
 ```c
@@ -64,8 +64,9 @@ Generic poiners are declared using `void *` and can point to data of any type. T
 should be used sparingly, as they can produce more bugs and introduce security issues.
 
 ## Arrays
-Array variables are pointers to the first element of the array. Declaing an array simply
-reserves of a block of memory.
+### Declaration
+Array variables are pointers to the first element of the array. Declaring an array simply
+reserves a block of memory.
 ```c
 int a[5];             // declares an array of 5 ints
 int b[] = {1, 2, 3};  // declares and initializes an array of 3 ints
@@ -75,42 +76,3 @@ int b[] = {1, 2, 3};  // declares and initializes an array of 3 ints
 Addition and subtraction can be done with pointers to move through memory. Adding 1 or
 subtracting `1` to a pointer alters its stored memory address by `sizeof(pointer type)`.
 In an array, this is equivalent to indexing the next element.
-
-## Potential Errors
-### Declaring Multiple Pointers
-An asterisk is needed before each variable name when declaring multiple pointers.
-```c
-int *p, q, r; // this declares a pointer and two ints
-```
-
-### Dangling Pointers
-Local variables in C are not initialized; newly declared pointers are *not* initialized to
-null. Hence, dereferencing uninitialized pointers will result in unexpected behavior.
-```c
-/* This code will likely error. */
-int *p;
-*p = 5;
-```
-
-### Stale Pointers
-
-### Returned Pointers
-Functions should not return pointers to local variables, because the stack frame is erased
-and the memory is deallocated upon reaching `return`. While the pointer will point to the
-correct location, this unallocated memory may be overwritten in the future, causing the
-values to change unexpectedly.
-```c
-/* A function that returns a pointer to the local variable y.*/
-int *foo() {
-    int y = 3;
-    return &y;
-}
-
-/* The main function. */
-main() {
-    int *p;
-    p = foo();          // calls foo, pointing p to y
-    printf("%d", *p)    // correctly prints 3
-    printf("%d", *p)    // prints garbage left by printf
-}
-```
